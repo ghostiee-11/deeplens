@@ -59,7 +59,7 @@ Understanding ML models requires jumping between 5+ disconnected tools: TensorBo
   <a href="https://hvplot.holoviz.org/"><img src="https://github.com/holoviz/hvplot/raw/main/doc/_static/logo_horizontal.png" alt="hvPlot" height="50"></a>&nbsp;&nbsp;
   <a href="https://bokeh.org/"><img src="https://static.bokeh.org/logos/logotype.svg" alt="Bokeh" height="50"></a>&nbsp;&nbsp;
   <a href="https://param.holoviz.org/"><img src="https://github.com/holoviz/param/raw/main/doc/_static/logo_stacked.png" alt="Param" height="50"></a>&nbsp;&nbsp;
-  <a href="https://scikit-learn.org/"><img src="https://raw.githubusercontent.com/scikit-learn/scikit-learn/main/doc/logos/scikit-learn-logo-notext.png" alt="scikit-learn" height="50"></a>&nbsp;&nbsp;
+  <a href="https://scikit-learn.org/"><img src="https://raw.githubusercontent.com/scikit-learn/scikit-learn/main/doc/logos/1280px-scikit-learn-logo.png" alt="scikit-learn" height="50"></a>&nbsp;&nbsp;
   <a href="https://shap.readthedocs.io/"><img src="https://raw.githubusercontent.com/shap/shap/master/docs/artwork/shap_diagram.png" alt="SHAP" height="50"></a>&nbsp;&nbsp;
   <a href="https://numpy.org/"><img src="https://raw.githubusercontent.com/numpy/numpy/main/branding/logo/logomark/numpylogoicon.png" alt="NumPy" height="50"></a>&nbsp;&nbsp;
   <a href="https://pandas.pydata.org/"><img src="https://raw.githubusercontent.com/pandas-dev/pandas/main/web/pandas/static/img/pandas_mark.svg" alt="pandas" height="50"></a>&nbsp;&nbsp;
