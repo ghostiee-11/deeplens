@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools>=68.0", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deeplens"
+version = "0.1.0"
+description = "Interactive AI Model Interpretability & Embedding Explorer — powered by HoloViz"
+readme = "README.md"
+license = {text = "BSD-3-Clause"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Aman Kumar"},
+]
+keywords = [
+    "holoviz", "panel", "datashader", "holoviews", "hvplot",
+    "machine-learning", "interpretability", "embeddings", "shap",
+    "visualization", "explainability", "counterfactual", "drift-detection",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "panel>=1.3.0",
+    "holoviews>=1.18.0",
+    "hvplot>=0.9.0",
+    "datashader>=0.16.0",
+    "bokeh>=3.3.0",
+    "scikit-learn>=1.3.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "scipy>=1.11.0",
+    "colorcet>=3.0.0",
+    "param>=2.0.0",
+]
+
+[project.optional-dependencies]
+embeddings = [
+    "sentence-transformers>=2.2.0",
+    "umap-learn>=0.5.0",
+]
+images = [
+    "open-clip-torch>=2.20.0",
+    "torchvision>=0.16.0",
+    "Pillow>=10.0.0",
+]
+explain = ["shap>=0.44.0"]
+llm = ["google-generativeai>=0.4.0"]
+llm-groq = ["groq>=0.1.0"]
+llm-local = ["ollama>=0.1.0"]
+lumen = ["lumen>=0.7.0"]
+all = ["deeplens[embeddings,explain,images,llm,lumen]"]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/ghostiee-11/deeplens"
+Repository = "https://github.com/ghostiee-11/deeplens"
+Issues = "https://github.com/ghostiee-11/deeplens/issues"
+
+[tool.setuptools.packages.find]
+include = ["deeplens*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

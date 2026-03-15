@@ -1,0 +1,143 @@
+"""Embedding computation — multiple backends, CPU-friendly defaults."""
+
+from __future__ import annotations
+
+import numpy as np
+import pandas as pd
+import param
+
+
+class EmbeddingComputer(param.Parameterized):
+    """Compute embeddings from text, images, or tabular features.
+
+    Parameters
+    ----------
+    method : str
+        One of ``'tfidf'`` (default, zero deps), ``'sentence-transformers'``,
+        ``'clip'``, or ``'features'`` (use raw numeric columns).
+    model_name : str
+        Model identifier for sentence-transformers / CLIP.
+    batch_size : int
+        Batch size for neural model inference.
+    max_features : int
+        Max features for TF-IDF vectorization.
+    """
+
+    method = param.Selector(
+        objects=["tfidf", "sentence-transformers", "clip", "features"],
+        default="tfidf",
+    )
+    model_name = param.String(default="all-MiniLM-L6-v2")
+    batch_size = param.Integer(default=32, bounds=(1, 512))
+    max_features = param.Integer(default=5000, bounds=(100, 50_000))
+
+    def compute(
+        self,
+        df: pd.DataFrame,
+        text_col: str | None = None,
+        image_col: str | None = None,
+    ) -> np.ndarray:
+        """Compute embeddings and return an ``(N, D)`` float32 array."""
+        if self.method == "tfidf":
+            return self._tfidf(df, text_col)
+        elif self.method == "sentence-transformers":
+            return self._sentence_transformers(df, text_col)
+        elif self.method == "clip":
+            return self._clip(df, text_col, image_col)
+        elif self.method == "features":
+            return self._features(df)
+        raise ValueError(f"Unknown method: {self.method}")
+
+    # ── Backends ────────────────────────────────────────────────────────
+
+    def _tfidf(self, df: pd.DataFrame, text_col: str | None) -> np.ndarray:
+        """TF-IDF on text data — zero extra deps, instant."""
+        from sklearn.feature_extraction.text import TfidfVectorizer
+
+        col = text_col or self._find_text_col(df)
+        if col is None:
+            # Fallback to raw features if no text
+            return self._features(df)
+
+        texts = df[col].astype(str).tolist()
+        vectorizer = TfidfVectorizer(max_features=self.max_features, stop_words="english")
+        matrix = vectorizer.fit_transform(texts)
+        return matrix.toarray().astype(np.float32)
+
+    def _sentence_transformers(self, df: pd.DataFrame, text_col: str | None) -> np.ndarray:
+        """Sentence-transformers embeddings (requires ``sentence-transformers``)."""
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError:
+            raise ImportError(
+                "Install sentence-transformers: pip install sentence-transformers"
+            )
+
+        col = text_col or self._find_text_col(df)
+        if col is None:
+            raise ValueError("No text column found. Specify text_col.")
+
+        model = SentenceTransformer(self.model_name)
+        texts = df[col].astype(str).tolist()
+        embeddings = model.encode(texts, batch_size=self.batch_size, show_progress_bar=True)
+        return np.array(embeddings, dtype=np.float32)
+
+    def _clip(self, df: pd.DataFrame, text_col: str | None, image_col: str | None) -> np.ndarray:
+        """CLIP embeddings for text and/or images (requires ``open-clip-torch``)."""
+        try:
+            import open_clip
+            import torch
+        except ImportError:
+            raise ImportError("Install open-clip-torch: pip install open-clip-torch")
+
+        model, _, preprocess = open_clip.create_model_and_transforms("ViT-B-32", pretrained="laion2b_s34b_b79k")
+        tokenizer = open_clip.get_tokenizer("ViT-B-32")
+        model.eval()
+
+        embeddings = []
+
+        if image_col and image_col in df.columns:
+            from PIL import Image
+
+            for path in df[image_col]:
+                img = preprocess(Image.open(path)).unsqueeze(0)
+                with torch.no_grad():
+                    emb = model.encode_image(img).squeeze().numpy()
+                embeddings.append(emb)
+        elif text_col and text_col in df.columns:
+            texts = df[text_col].astype(str).tolist()
+            for i in range(0, len(texts), self.batch_size):
+                batch = texts[i : i + self.batch_size]
+                tokens = tokenizer(batch)
+                with torch.no_grad():
+                    emb = model.encode_text(tokens).numpy()
+                embeddings.append(emb)
+            return np.vstack(embeddings).astype(np.float32)
+        else:
+            raise ValueError("CLIP requires text_col or image_col")
+
+        return np.array(embeddings, dtype=np.float32)
+
+    def _features(self, df: pd.DataFrame) -> np.ndarray:
+        """Use raw numeric features as the embedding."""
+        numeric = df.select_dtypes(include=[np.number])
+        if numeric.empty:
+            raise ValueError("No numeric columns found for feature-based embeddings")
+        arr = numeric.values.astype(np.float32)
+        # Impute NaNs with column means, fallback to 0
+        nan_mask = np.isnan(arr)
+        if nan_mask.any():
+            col_means = np.nanmean(arr, axis=0)
+            col_means = np.where(np.isnan(col_means), 0.0, col_means)
+            arr[nan_mask] = np.take(col_means, np.where(nan_mask)[1])
+        return arr
+
+    # ── Helpers ─────────────────────────────────────────────────────────
+
+    @staticmethod
+    def _find_text_col(df: pd.DataFrame) -> str | None:
+        """Heuristic: find the column most likely to contain text."""
+        from deeplens.data.loaders import infer_columns
+
+        info = infer_columns(df)
+        return info.get("text")
