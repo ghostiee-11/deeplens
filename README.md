@@ -57,7 +57,7 @@ Understanding ML models requires jumping between 5+ disconnected tools: TensorBo
   <a href="https://holoviews.org/"><img src="https://assets.holoviews.org/logo/holoviews_color_icon_500x500.png" alt="HoloViews" height="50"></a>&nbsp;&nbsp;
   <a href="https://datashader.org/"><img src="https://github.com/holoviz/datashader/raw/main/doc/_static/logo_stacked.png" alt="Datashader" height="50"></a>&nbsp;&nbsp;
   <a href="https://hvplot.holoviz.org/"><img src="https://github.com/holoviz/hvplot/raw/main/doc/_static/logo_horizontal.png" alt="hvPlot" height="50"></a>&nbsp;&nbsp;
-  <a href="https://bokeh.org/"><img src="https://raw.githubusercontent.com/bokeh/pm/main/assets/logos/SVG/bokeh-logo-grey-text-no-padding.svg" alt="Bokeh" height="50"></a>&nbsp;&nbsp;
+  <a href="https://bokeh.org/"><img src="https://static.bokeh.org/logos/logotype.svg" alt="Bokeh" height="50"></a>&nbsp;&nbsp;
   <a href="https://param.holoviz.org/"><img src="https://github.com/holoviz/param/raw/main/doc/_static/logo_stacked.png" alt="Param" height="50"></a>&nbsp;&nbsp;
   <a href="https://scikit-learn.org/"><img src="https://raw.githubusercontent.com/scikit-learn/scikit-learn/main/doc/logos/scikit-learn-logo-notext.png" alt="scikit-learn" height="50"></a>&nbsp;&nbsp;
   <a href="https://shap.readthedocs.io/"><img src="https://raw.githubusercontent.com/shap/shap/master/docs/artwork/shap_diagram.png" alt="SHAP" height="50"></a>&nbsp;&nbsp;
