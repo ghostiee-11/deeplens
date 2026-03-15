@@ -101,6 +101,12 @@ The dashboard features **8 tabs** with lazy-loaded modules, a collapsible sideba
 </tr>
 </table>
 
+### Model Training & Iris Explorer
+
+> Train RandomForest on Iris - 96.67% accuracy, per-class coloring with setosa/versicolor/virginica legend
+
+![Iris Trained](screenshots/04-explore-iris-trained.png)
+
 ### Model Inspector
 
 > Confusion matrix (clickable cells), per-class F1 scores, ROC curves with AUC
