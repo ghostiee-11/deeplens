@@ -103,12 +103,16 @@ class ExplainabilityEngine(pn.viewable.Viewer):
     @param.depends("state.selected_indices")
     def _waterfall_panel(self):
         """Show SHAP waterfall for the first selected point."""
-        if not self.state.selected_indices or not self.state.has_model:
+        if not self.state.has_model:
             return pn.pane.Markdown(
-                "### SHAP Waterfall\n*Select a point to see its explanation.*"
+                "### SHAP Waterfall\n*Train a model first to see explanations.*"
             )
 
-        idx = self.state.selected_indices[0]
+        if not self.state.selected_indices:
+            # Auto-select first sample so users see something immediately
+            idx = 0
+        else:
+            idx = self.state.selected_indices[0]
         result = self._compute_shap_for_index(idx)
         if not result:
             return pn.pane.Markdown("*Train a model first to see SHAP explanations.*")
@@ -130,10 +134,15 @@ class ExplainabilityEngine(pn.viewable.Viewer):
     @param.depends("state.selected_indices")
     def _importance_panel(self):
         """Show feature importance for the current selection."""
-        if not self.state.selected_indices or not self.state.has_model:
+        if not self.state.has_model:
             return pn.pane.Markdown(
-                "### Feature Importance\n*Select points to see aggregate importance.*"
+                "### Feature Importance\n*Train a model first.*"
             )
+
+        if not self.state.selected_indices:
+            # Show global importance using first 50 samples
+            n = min(50, len(self.state.df))
+            self.state.selected_indices = list(range(n))
 
         result = self._compute_shap_for_selection()
         if result is None:

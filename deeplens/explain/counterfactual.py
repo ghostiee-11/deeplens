@@ -94,6 +94,11 @@ class CounterfactualExplorer(pn.viewable.Viewer):
             "### Modify Features",
             *sliders,
             pn.Row(reset_btn, find_btn, sizing_mode="stretch_width", margin=(10, 0)),
+            width=320,
+            min_width=280,
+            sizing_mode="fixed",
+            scroll=True,
+            max_height=600,
         )
 
     def _get_current_values(self) -> np.ndarray:
@@ -180,13 +185,16 @@ class CounterfactualExplorer(pn.viewable.Viewer):
     @param.depends("state.selected_indices")
     def _prediction_panel(self):
         """Show current vs modified prediction."""
-        if not self.state.selected_indices or not self.state.has_model:
+        if not self.state.has_model:
             return pn.pane.Markdown(
                 "### Counterfactual Explorer\n"
-                "*Select a point in the embedding space, then modify features to see how the prediction changes.*"
+                "*Train a model first.*"
             )
 
-        idx = self.state.selected_indices[0]
+        if not self.state.selected_indices:
+            idx = 0
+        else:
+            idx = self.state.selected_indices[0]
         if idx != self.selected_index:
             self.selected_index = idx
 
@@ -255,23 +263,24 @@ class CounterfactualExplorer(pn.viewable.Viewer):
         if not self.state.has_model:
             return pn.pane.Markdown(
                 "### Counterfactual Explorer\n\n"
-                "*Train a model first using the sidebar, then select a point.*"
-            )
-        if not self.state.selected_indices:
-            return pn.pane.Markdown(
-                "### Counterfactual Explorer\n\n"
-                "Select a point in the **Explore** tab to start.\n\n"
-                "Use lasso or click a point, then come back here to modify "
-                "features with sliders and explore counterfactuals.\n\n"
-                "*What minimal change would flip this prediction?*"
+                "*Train a model first using the sidebar.*"
             )
 
-        idx = self.state.selected_indices[0]
+        if not self.state.selected_indices:
+            # Auto-select first sample so users see something immediately
+            idx = 0
+        else:
+            idx = self.state.selected_indices[0]
         sliders = self._build_sliders(idx)
 
         return pn.Row(
             sliders,
-            self._prediction_panel,
+            pn.layout.HSpacer(width=20),
+            pn.Column(
+                self._prediction_panel,
+                sizing_mode="stretch_width",
+                min_width=300,
+            ),
             sizing_mode="stretch_width",
         )
 

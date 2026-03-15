@@ -256,7 +256,7 @@ class ModelTrainer(pn.viewable.Viewer):
                 f"| Train samples | {n_train} |\n"
                 f"| Test samples | {n_test} |\n"
             )
-            self._metrics_card.title = f"Results — {self.model_choice}"
+            self._metrics_card.title = f"Results -{self.model_choice}"
             self._metrics_card.collapsed = False
             self._metrics_card.visible = True
             self._status.object = "Training complete."
@@ -369,7 +369,7 @@ class ModelTrainer(pn.viewable.Viewer):
                 f"| Train samples | {n_train} |\n"
                 f"| Test samples | {n_test} |\n"
             )
-            self._metrics_card.title = f"Results — {self.model_choice}"
+            self._metrics_card.title = f"Results -{self.model_choice}"
             self._metrics_card.collapsed = False
             self._metrics_card.visible = True
             self._status.object = "Training complete."

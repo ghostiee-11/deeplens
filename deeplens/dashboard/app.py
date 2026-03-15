@@ -926,6 +926,17 @@ class DeepLensDashboard(pn.viewable.Viewer):
             content = self._build_tab(name)
             if content is not None:
                 self._tab_cache[name] = content
+            else:
+                # Show a placeholder but don't cache it
+                _placeholders = {
+                    "Explain": "Train a model in the sidebar to unlock SHAP explanations & counterfactuals.",
+                    "Inspect": "Train a model in the sidebar to unlock model inspection.",
+                    "Compare": "Train 2+ models to unlock model comparison.",
+                    "Annotate": "Train a model to unlock active learning annotation.",
+                }
+                msg = _placeholders.get(name, "Load a dataset to unlock this tab.")
+                self._tabs[idx] = (name, pn.pane.Markdown(f"### {name}\n\n*{msg}*"))
+                return
 
         cached = self._tab_cache.get(name)
         if cached is not None:
@@ -977,13 +988,10 @@ class DeepLensDashboard(pn.viewable.Viewer):
             return pn.pane.Markdown("*EmbeddingExplorer unavailable.*")
         return cls(state=self.state)
 
-    def _build_explain(self) -> pn.Column | pn.pane.Markdown:
+    def _build_explain(self) -> pn.Column | pn.pane.Markdown | None:
         if not self.state.has_model:
-            return pn.pane.Markdown(
-                "### Explain Tab\n\n"
-                "SHAP waterfall plots & counterfactual exploration for individual predictions.\n\n"
-                "*Train a model in the sidebar to unlock this tab.*"
-            )
+            # Return None so it's not cached - will retry on next tab click
+            return None
 
         parts: list[Any] = []
 
@@ -1011,13 +1019,9 @@ class DeepLensDashboard(pn.viewable.Viewer):
             return pn.Row(*parts, sizing_mode="stretch_both")
         return pn.Column(*parts, sizing_mode="stretch_both")
 
-    def _build_inspect(self) -> pn.viewable.Viewer | pn.pane.Markdown:
+    def _build_inspect(self) -> pn.viewable.Viewer | pn.pane.Markdown | None:
         if not self.state.has_model:
-            return pn.pane.Markdown(
-                "### Inspect Tab\n\n"
-                "Confusion matrix, ROC curves & classification metrics.\n\n"
-                "*Train a model in the sidebar to unlock this tab.*"
-            )
+            return None
         parts: list[Any] = []
 
         cls = _safe_import("deeplens.models.inspector", "ModelInspector")
@@ -1039,17 +1043,10 @@ class DeepLensDashboard(pn.viewable.Viewer):
             return pn.pane.Markdown("*ModelInspector unavailable.*")
         return pn.Column(*parts, sizing_mode="stretch_both")
 
-    def _build_compare(self) -> pn.viewable.Viewer | pn.pane.Markdown:
+    def _build_compare(self) -> pn.viewable.Viewer | pn.pane.Markdown | None:
         history = self.state.model_history
         if len(history) < 2:
-            n_trained = len(history)
-            return pn.pane.Markdown(
-                f"### Model Arena\n\n"
-                f"*Train at least **2 different models** to compare them.*\n\n"
-                f"Models trained so far: **{n_trained}**\n\n"
-                f"Go to the **Train Model** section in the sidebar, "
-                f"select a different model type, and train again."
-            )
+            return None
         cls = _safe_import("deeplens.compare.models", "ModelArena")
         if cls is None:
             return pn.pane.Markdown("*ModelArena unavailable.*")
@@ -1105,13 +1102,9 @@ class DeepLensDashboard(pn.viewable.Viewer):
         except Exception as exc:
             return pn.pane.Markdown(f"*DRQuality error: {exc}*")
 
-    def _build_annotate(self) -> pn.viewable.Viewer | pn.pane.Markdown:
+    def _build_annotate(self) -> pn.viewable.Viewer | pn.pane.Markdown | None:
         if not self.state.has_model:
-            return pn.pane.Markdown(
-                "### Annotate Tab\n\n"
-                "Active learning annotation with uncertainty sampling.\n\n"
-                "*Train a model in the sidebar to unlock this tab.*"
-            )
+            return None
         cls = _safe_import("deeplens.annotate.labeler", "ActiveLearningAnnotator")
         if cls is None:
             return pn.pane.Markdown("*ActiveLearningAnnotator unavailable.*")
