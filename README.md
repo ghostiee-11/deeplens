@@ -53,11 +53,11 @@ Understanding ML models requires jumping between 5+ disconnected tools: TensorBo
 ## Built With
 
 <p align="center">
-  <a href="https://panel.holoviz.org/"><img src="https://github.com/holoviz/panel/raw/main/doc/_static/logo_horizontal_light_theme.png" alt="Panel" height="50"></a>&nbsp;&nbsp;
+  <a href="https://panel.holoviz.org/"><img src="https://github.com/holoviz/panel/raw/main/doc/_static/logo_horizontal_dark_theme.png" alt="Panel" height="50"></a>&nbsp;&nbsp;
   <a href="https://holoviews.org/"><img src="https://assets.holoviews.org/logo/holoviews_color_icon_500x500.png" alt="HoloViews" height="50"></a>&nbsp;&nbsp;
   <a href="https://datashader.org/"><img src="https://github.com/holoviz/datashader/raw/main/doc/_static/logo_stacked.png" alt="Datashader" height="50"></a>&nbsp;&nbsp;
   <a href="https://hvplot.holoviz.org/"><img src="https://github.com/holoviz/hvplot/raw/main/doc/_static/logo_horizontal.png" alt="hvPlot" height="50"></a>&nbsp;&nbsp;
-  <a href="https://bokeh.org/"><img src="https://raw.githubusercontent.com/bokeh/pm/main/assets/logos/SVG/bokeh-logo-black-text-no-padding.svg" alt="Bokeh" height="50"></a>&nbsp;&nbsp;
+  <a href="https://bokeh.org/"><img src="https://raw.githubusercontent.com/bokeh/pm/main/assets/logos/SVG/bokeh-logo-grey-text-no-padding.svg" alt="Bokeh" height="50"></a>&nbsp;&nbsp;
   <a href="https://param.holoviz.org/"><img src="https://github.com/holoviz/param/raw/main/doc/_static/logo_stacked.png" alt="Param" height="50"></a>&nbsp;&nbsp;
   <a href="https://scikit-learn.org/"><img src="https://raw.githubusercontent.com/scikit-learn/scikit-learn/main/doc/logos/scikit-learn-logo-notext.png" alt="scikit-learn" height="50"></a>&nbsp;&nbsp;
   <a href="https://shap.readthedocs.io/"><img src="https://raw.githubusercontent.com/shap/shap/master/docs/artwork/shap_diagram.png" alt="SHAP" height="50"></a>&nbsp;&nbsp;
@@ -172,14 +172,6 @@ The dashboard features **8 tabs** with lazy-loaded modules, a collapsible sideba
 - **AI Analyst**: Floating chat panel with LLM insights
 - **Export**: Download snapshot (JSON), export as Jupyter notebook (1-click)
 - **Guided Tour**: Interactive walkthrough for new users
-
-### Keyboard Shortcuts
-
-| Key | Action |
-|-----|--------|
-| `Alt + 1-8` | Switch between tabs |
-| `?` | Show keyboard shortcut help modal |
-| `Esc` | Close modal / deselect |
 
 ---
 
@@ -300,10 +292,6 @@ DeepLensState (param.Parameterized) - single reactive state object
               v
         All views update reactively via param.depends()
 ```
-
-### Async Architecture
-
-Heavy computation (embedding, model training) runs in a `ThreadPoolExecutor` via `run_in_executor`, keeping the UI responsive. The dashboard detects whether it's running in a Panel server event loop or synchronously (tests/CLI) and routes accordingly.
 
 ---
 
