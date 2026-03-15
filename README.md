@@ -72,11 +72,19 @@ Understanding ML models requires jumping between 5+ disconnected tools: TensorBo
 
 The dashboard features **8 tabs** with lazy-loaded modules, a collapsible sidebar with dataset selection, model training, NL filtering, and AI analyst chat. All views are cross-filtered through a shared reactive state.
 
-### Embedding Explorer
+<p align="center">
+  <img src="screenshots/deeplens.gif" alt="DeepLens Dashboard Demo" width="100%">
+</p>
 
-> Titanic dataset (891 samples) — fetched from remote URL, PCA-reduced with auto-clustering, trustworthiness 0.995
+> Iris dataset - train a RandomForest, explore embeddings with per-class coloring, cluster summary, and DR quality metrics
 
-![Explore](screenshots/01-explore-titanic.png)
+### SHAP Explanations & Counterfactual Explorer
+
+<p align="center">
+  <img src="screenshots/explain.gif" alt="Explain Tab Demo" width="100%">
+</p>
+
+> SHAP waterfall plot with feature importance, counterfactual sliders to modify features and watch predictions change in real-time
 
 ### Lasso Selection & Details
 
@@ -89,15 +97,9 @@ The dashboard features **8 tabs** with lazy-loaded modules, a collapsible sideba
 </tr>
 <tr>
 <td align="center"><em>Full embedding scatter with cluster summary</em></td>
-<td align="center"><em>Lasso selection → class distribution + feature stats</em></td>
+<td align="center"><em>Lasso selection - class distribution + feature stats</em></td>
 </tr>
 </table>
-
-### Model Training & Iris Explorer
-
-> Train RandomForest on Iris — 96.67% accuracy, per-class coloring with setosa/versicolor/virginica legend
-
-![Iris Trained](screenshots/04-explore-iris-trained.png)
 
 ### Model Inspector
 
